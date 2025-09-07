@@ -1,0 +1,58 @@
+version: '3.8'
+services:
+  nestjs:
+    build:
+      context: .
+      dockerfile: .docker/nestjs/Dockerfile
+    container_name: shorten_link_worker
+    restart: always
+    environment:
+      - NODE_ENV=development
+      - DATABASE_HOST=mysql
+      - DATABASE_PORT=3306
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=password
+      - DATABASE_NAME=shorten_link
+      - HOST=0.0.0.0
+      - PORT=3000
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - mysql
+    networks:
+      - app_network
+
+  mysql:
+    image: mysql:8.0
+    container_name: shorten_link_mysql
+    restart: always
+    ports:
+      - '3307:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: shorten_link
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - app_network
+
+  nginx:
+    image: nginx:latest
+    container_name: shorten_link_server
+    restart: always
+    ports:
+      - '8080:80'
+    volumes:
+      - ./.docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - nestjs
+    networks:
+      - app_network
+
+volumes:
+  db_data:
+
+networks:
+  app_network:
+    driver: bridge
