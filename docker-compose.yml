@@ -6,20 +6,22 @@ services:
       dockerfile: .docker/nestjs/Dockerfile
     container_name: shorten_link_worker
     restart: always
+    env_file:
+      - .env
     environment:
-      - NODE_ENV=development
-      - DATABASE_HOST=mysql
-      - DATABASE_PORT=3306
-      - DATABASE_USER=root
-      - DATABASE_PASSWORD=password
-      - DATABASE_NAME=shorten_link
-      - HOST=0.0.0.0
-      - PORT=3000
+      # Ensure the app connects to MySQL service over the docker network
+      DATABASE_HOST: mysql
+      DATABASE_PORT: 3306
+      DATABASE_USER: root
+      DATABASE_PASSWORD: password
+      DATABASE_NAME: shorten_link
+      NODE_ENV: development
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     networks:
       - app_network
 
@@ -34,6 +36,11 @@ services:
       MYSQL_DATABASE: shorten_link
     volumes:
       - db_data:/var/lib/mysql
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', '127.0.0.1', '-ppassword']
+      interval: 5s
+      timeout: 5s
+      retries: 20
     networks:
       - app_network
 
