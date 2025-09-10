@@ -17,11 +17,11 @@ export class ShortLink {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ name: 'short_url', length: 50, unique: true })
-  shortUrl: string;
-
   @Column({ name: 'original_url', type: 'text' })
   originalUrl: string;
+
+  @Column({ name: 'short_code', length: 20, unique: true })
+  shortCode: string;
 
   @Column({ name: 'click_count', default: 0 })
   clickCount: number;
@@ -31,7 +31,7 @@ export class ShortLink {
     name: 'expires_at',
     nullable: true,
   })
-  expiresAt: Date;
+  expiresAt?: Date | null;
 
   @ManyToOne(() => User, (user) => user.shortLinks, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
@@ -46,6 +46,6 @@ export class ShortLink {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  @DeleteDateColumn({ name: 'deleted_at' })
-  deletedAt?: Date;
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
+  deletedAt?: Date | null;
 }
