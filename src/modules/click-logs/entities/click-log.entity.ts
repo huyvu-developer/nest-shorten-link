@@ -6,6 +6,7 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('click_logs')
@@ -16,16 +17,22 @@ export class ClickLog {
   @CreateDateColumn({ name: 'clicked_at' })
   clickedAt: Date;
 
-  @Column({ name: 'ip_address', length: 45 })
-  ipAddress: string;
+  @Column({ name: 'ip_address', length: 45, nullable: true })
+  ipAddress?: string;
 
-  @Column({ name: 'user_agent', type: 'text' })
-  userAgent: string;
+  @Column({ name: 'user_agent', type: 'text', nullable: true })
+  userAgent?: string;
 
-  @Column({ length: 100 })
-  country: string;
+  @Column({ length: 100, nullable: true })
+  country?: string;
 
   @ManyToOne(() => ShortLink, (shortLink) => shortLink.clickLogs)
   @JoinColumn({ name: 'short_link_id' })
   shortLink: ShortLink;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
 }
