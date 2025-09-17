@@ -10,6 +10,7 @@ import { LoggerMiddleware } from '@common/middlewares/logger.middleware';
 import { jwtConfig } from '@config/jwt.config';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from './modules/auth/auth.module';
+import { FilesModule } from './modules/files/files.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { AuthModule } from './modules/auth/auth.module';
     ShortLinksModule,
     ClickLogsModule,
     AuthModule,
+    FilesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

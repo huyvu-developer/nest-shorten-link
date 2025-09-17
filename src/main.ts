@@ -6,9 +6,6 @@ import { ResponseInterceptor } from '@common/interceptors/response.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
-  // Enable CORS
-  app.enableCors();
   app.setGlobalPrefix('api');
   app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter());
@@ -21,6 +18,7 @@ async function bootstrap() {
     }),
   );
 
+  app.enableCors();
   await app.listen(process.env.PORT ?? 3000);
   console.log(`Application is running on: ${await app.getUrl()}`);
 }
