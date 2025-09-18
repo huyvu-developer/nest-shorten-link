@@ -15,7 +15,9 @@ export class ShortLinksService extends BaseService<ShortLink> {
     super(shortLinkRepository);
   }
 
-  async create(data: CreateShortLinkDto): Promise<ShortLink> {
+  async create(
+    data: CreateShortLinkDto,
+  ): Promise<ShortLink & { shortUrl: string }> {
     const { userId, originalUrl } = data;
 
     let existing: ShortLink | null = null;
@@ -24,7 +26,11 @@ export class ShortLinksService extends BaseService<ShortLink> {
       existing = await this.shortLinkRepository.findOne({
         where: { user: { id: userId }, originalUrl },
       });
-      if (existing) return existing;
+      if (existing)
+        return {
+          ...existing,
+          shortUrl: `${process.env.BASE_URL || 'http://localhost:8080'}/${existing.shortCode}`,
+        };
     }
 
     let shortCode: string | null = null;
@@ -52,6 +58,7 @@ export class ShortLinksService extends BaseService<ShortLink> {
       user: userId ? { id: userId } : undefined,
       originalUrl,
       shortCode,
+      shortUrl: `${process.env.BASE_URL || 'http://localhost:8080'}/${shortCode}`,
     });
   }
 

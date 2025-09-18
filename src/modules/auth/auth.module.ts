@@ -7,12 +7,14 @@ import { jwtConfig } from '@config/jwt.config';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
 import { UsersModule } from '@modules/users/users.module';
+import { FilesModule } from '@modules/files/files.module';
 
 @Module({
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register(jwtConfig),
     UsersModule,
+    FilesModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy, LocalStrategy],
