@@ -3,7 +3,7 @@ import { ClickLog } from './entities/click-log.entity';
 import { BaseController } from '@common/base/base.controller';
 import { ClickLogsService } from './click-logs.service';
 
-@Controller('click-logs')
+@Controller('api/click-logs')
 export class ClickLogsController extends BaseController<ClickLog> {
   constructor(private readonly clickLogsService: ClickLogsService) {
     super(clickLogsService);
