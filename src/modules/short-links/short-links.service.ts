@@ -29,7 +29,7 @@ export class ShortLinksService extends BaseService<ShortLink> {
       if (existing)
         return {
           ...existing,
-          shortUrl: `${process.env.BASE_URL || 'http://localhost:8080'}/${existing.shortCode}`,
+          shortUrl: this.getShortUrl(existing.shortCode),
         };
     }
 
@@ -58,20 +58,31 @@ export class ShortLinksService extends BaseService<ShortLink> {
       user: userId ? { id: userId } : undefined,
       originalUrl,
       shortCode,
-      shortUrl: `${process.env.BASE_URL || 'http://localhost:8080'}/${shortCode}`,
+      shortUrl: this.getShortUrl(shortCode),
     });
   }
 
   async findByUserId(userId: number): Promise<ShortLink[]> {
-    return await this.shortLinkRepository.find({
+    const shortLinks = await this.shortLinkRepository.find({
       where: { user: { id: userId } },
     });
+    return shortLinks.map((shortLink) => ({
+      ...shortLink,
+      shortUrl: this.getShortUrl(shortLink.shortCode),
+    }));
   }
 
-  async findByShortCode(shortCode: string): Promise<ShortLink> {
-    return await this.shortLinkRepository.findOne({
+  async findByShortCode(
+    shortCode: string,
+  ): Promise<ShortLink & { shortUrl: string }> {
+    const shortLink = await this.shortLinkRepository.findOne({
       where: { shortCode },
     });
+
+    return {
+      ...shortLink,
+      shortUrl: this.getShortUrl(shortLink.shortCode),
+    };
   }
 
   async incrementClickCount(shortLinkId: number): Promise<void> {
@@ -80,5 +91,16 @@ export class ShortLinksService extends BaseService<ShortLink> {
       'clickCount',
       1,
     );
+  }
+
+  async getStatistical(userId: number): Promise<any> {
+    const countLink = await this.shortLinkRepository.count({
+      where: { user: { id: userId } },
+    });
+    return countLink;
+  }
+
+  private getShortUrl(shortCode: string): string {
+    return `${process.env.BASE_URL || 'http://localhost:8080'}/${shortCode}`;
   }
 }
