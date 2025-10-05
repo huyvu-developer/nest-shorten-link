@@ -41,4 +41,14 @@ export class ShortLinksController extends BaseController<ShortLink> {
     }
     return this.shortLinkService.findByUserId(userId);
   }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('statistical')
+  async getDashboard(@Req() req: Request & { user: User }): Promise<any> {
+    const userId = req?.user?.id;
+    if (!userId) {
+      throw new NotFoundException('User ID not found');
+    }
+    return this.shortLinkService.getStatistical(userId);
+  }
 }
