@@ -32,9 +32,6 @@ export class User {
   @Column({ nullable: true, length: 13 })
   phone: string;
 
-  @Column({ nullable: true, length: 13, name: 'test_migration' })
-  testMigration: string;
-
   @Column({ type: 'enum', enum: UserStatus, default: UserStatus.ACTIVE })
   status: UserStatus;
 

@@ -35,9 +35,6 @@ export class ClickLog {
   @Column({ length: 30, nullable: true })
   os?: string;
 
-  @Column({ name: 'test_migration', nullable: true })
-  testMigartion: string;
-
   @ManyToOne(() => ShortLink, (shortLink) => shortLink.clickLogs)
   @JoinColumn({ name: 'short_link_id' })
   shortLink: ShortLink;
