@@ -23,8 +23,20 @@ export class ClickLog {
   @Column({ name: 'user_agent', type: 'text', nullable: true })
   userAgent?: string;
 
-  @Column({ length: 100, nullable: true })
-  country?: string;
+  @Column({ type: 'text', nullable: true })
+  address?: string;
+
+  @Column({ length: 30, nullable: true })
+  device?: string;
+
+  @Column({ length: 30, nullable: true })
+  browser?: string;
+
+  @Column({ length: 30, nullable: true })
+  os?: string;
+
+  @Column({ name: 'test_migration', nullable: true })
+  testMigartion: string;
 
   @ManyToOne(() => ShortLink, (shortLink) => shortLink.clickLogs)
   @JoinColumn({ name: 'short_link_id' })
