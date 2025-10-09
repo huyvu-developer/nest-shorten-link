@@ -65,6 +65,7 @@ export class ShortLinksService extends BaseService<ShortLink> {
   async findByUserId(userId: number): Promise<ShortLink[]> {
     const shortLinks = await this.shortLinkRepository.find({
       where: { user: { id: userId } },
+      order: { createdAt: 'DESC' },
     });
     return shortLinks.map((shortLink) => ({
       ...shortLink,
@@ -91,13 +92,6 @@ export class ShortLinksService extends BaseService<ShortLink> {
       'clickCount',
       1,
     );
-  }
-
-  async getStatistical(userId: number): Promise<any> {
-    const countLink = await this.shortLinkRepository.count({
-      where: { user: { id: userId } },
-    });
-    return countLink;
   }
 
   private getShortUrl(shortCode: string): string {

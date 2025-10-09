@@ -11,6 +11,7 @@ import { jwtConfig } from '@config/jwt.config';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from './modules/auth/auth.module';
 import { FilesModule } from './modules/files/files.module';
+import { StatisticsModule } from './modules/statistics/statistics.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { FilesModule } from './modules/files/files.module';
     ClickLogsModule,
     AuthModule,
     FilesModule,
+    StatisticsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

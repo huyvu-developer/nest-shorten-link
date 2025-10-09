@@ -14,14 +14,10 @@ import { CreateShortLinkDto } from './dto/create-short-link.dto';
 import { Request } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from '@modules/users/entities/user.entity';
-import { ClickLogsService } from '@modules/click-logs/click-logs.service';
 
 @Controller('api/short-links')
 export class ShortLinksController extends BaseController<ShortLink> {
-  constructor(
-    private readonly shortLinkService: ShortLinksService,
-    private readonly clickLogsService: ClickLogsService,
-  ) {
+  constructor(private readonly shortLinkService: ShortLinksService) {
     super(shortLinkService);
   }
 
@@ -40,15 +36,5 @@ export class ShortLinksController extends BaseController<ShortLink> {
       throw new NotFoundException('User ID not found');
     }
     return this.shortLinkService.findByUserId(userId);
-  }
-
-  @UseGuards(AuthGuard('jwt'))
-  @Get('statistical')
-  async getDashboard(@Req() req: Request & { user: User }): Promise<any> {
-    const userId = req?.user?.id;
-    if (!userId) {
-      throw new NotFoundException('User ID not found');
-    }
-    return this.shortLinkService.getStatistical(userId);
   }
 }
