@@ -40,6 +40,9 @@ export class ShortLink {
   @OneToMany(() => ClickLog, (clickLog) => clickLog.shortLink)
   clickLogs: ClickLog[];
 
+  @Column({ name: 'is_expired', default: false })
+  isExpired: boolean;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 

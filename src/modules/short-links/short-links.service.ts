@@ -2,7 +2,7 @@ import { BaseService } from '@common/base/base.service';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ShortLink } from './entities/short-link.entity';
-import { Repository } from 'typeorm';
+import { LessThan, Repository } from 'typeorm';
 import { generateShortCode } from '@utils/short-code.util';
 import { CreateShortLinkDto } from './dto/create-short-link.dto';
 
@@ -58,6 +58,8 @@ export class ShortLinksService extends BaseService<ShortLink> {
       user: userId ? { id: userId } : undefined,
       originalUrl,
       shortCode,
+      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // expired in 1 month
+      // expiresAt: new Date(Date.now() + 60 * 1000),
       shortUrl: this.getShortUrl(shortCode),
     });
   }
@@ -91,6 +93,13 @@ export class ShortLinksService extends BaseService<ShortLink> {
       { id: shortLinkId },
       'clickCount',
       1,
+    );
+  }
+
+  async checkExpiredLinks() {
+    await this.shortLinkRepository.update(
+      { expiresAt: LessThan(new Date()), isExpired: false },
+      { isExpired: true },
     );
   }
 
