@@ -30,7 +30,11 @@ export class StatisticsService {
     });
 
     const totalLinkExpired = await this.shortLinkRepository.count({
-      where: { user: { id: userId }, expiresAt: Between(startDate, endDate) },
+      where: {
+        user: { id: userId },
+        isExpired: true,
+        updatedAt: Between(startDate, endDate),
+      },
     });
 
     return {

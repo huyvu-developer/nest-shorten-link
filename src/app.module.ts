@@ -12,10 +12,13 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from './modules/auth/auth.module';
 import { FilesModule } from './modules/files/files.module';
 import { StatisticsModule } from './modules/statistics/statistics.module';
+import { TasksModule } from './modules/tasks/tasks.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(databaseConfig),
+    ScheduleModule.forRoot(),
     JwtModule.register(jwtConfig),
     UsersModule,
     ShortLinksModule,
@@ -23,6 +26,7 @@ import { StatisticsModule } from './modules/statistics/statistics.module';
     AuthModule,
     FilesModule,
     StatisticsModule,
+    TasksModule,
   ],
   controllers: [AppController],
   providers: [AppService],
